@@ -1,86 +1,29 @@
-mport unittest
-import pep8
-import json
-import os
-from datetime import datetime
-from models.base_model import BaseModel
-from models.user import User
-from models.state import State
+#!/usr/bin/python3
+""" """
+from tests.test_models.test_base_model import test_basemodel
 from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-from models.engine.file_storage import FileStorage
+import os
 
 
-class TestCityDocs(unittest.TestCase):
-    """ check for documentation """
-    def test_class_doc(self):
-        """ check for class documentation """
-        self.assertTrue(len(City.__doc__) > 0)
+class test_City(test_basemodel):
+    """ tests for city """
 
-
-class TestCityPep8(unittest.TestCase):
-    """ check for pep8 validation """
-    def test_pep8(self):
-        """ test base and test_base for pep8 conformance """
-        style = pep8.StyleGuide(quiet=True)
-        file1 = 'models/city.py'
-        file2 = 'tests/test_models/test_city.py'
-        result = style.check_files([file1, file2])
-        self.assertEqual(result.total_errors, 0,
-                "Found code style errors (and warning).")
-
-
-class TestCity(unittest.TestCase):
-    """ tests for class City """
-    @classmethod
-
-    def setUpClass(cls):
-        """ set up instances for all tests """
-        cls.city = City()
-
-    def test_subclass(self):
-        """ test that city is a subclass of basemodel """
-        self.assertIsInstance(self.city, BaseModel)
-        self.assertTrue(hasattr(self.city, "id"))
-        self.assertTrue(hasattr(self.city, "created_at"))
-        self.assertTrue(hasattr(self.city, "updated_at"))
-
-    def test_id(self):
-        """ test id """
-        self.assertEqual(str, type(self.city.id))
-
-    def test_created_at(self):
-        """ test created_at """
-        self.assertEqual(datetime, type(self.city.created_at))
-
-    def test_updated_at(self):
-        """ test updated_at """
-        self.assertEqual(datetime, type(self.city.updated_at))
-
-    def test_name(self):
-        """ test name """
-        self.assertTrue(hasattr(self.city, "name"))
-        self.assertEqual(self.city.name, "")
+    def __init__(self, *args, **kwargs):
+        """ init the test class"""
+        super().__init__(*args, **kwargs)
+        self.name = "City"
+        self.value = City
 
     def test_state_id(self):
-        """ test state id """
-        self.assertTrue(hasattr(self.city, "state_id"))
-        self.assertEqual(self.city.state_id, "")
-            
-    def test_to_dict(self):
-        """ test to_dict method """
-        new_dict = self.city.to_dict()
-        self.assertEqual(type(new_dict), dict)
-        self.assertTrue('to_dict' in dir(self.city))
+        """ testing state_id type """
+        new = self.value()
+        self.assertEqual(type(new.state_id), str if
+                os.getenv('HBNB_TYPE_STORAGE') != 'db' else
+                type(None))
 
-    def test_str(self):
-        """ test ___str___ method """
-        correct = "[City] ({}) {}".format(self.city.id, self.city.__dict__)
-        self.assertEqual(correct, str(self.city))
-
-    @classmethod
-    def tearDownClass(cls):
-        """ remove test instances """
-        pass
+    def test_name(self):
+        """ testing name type"""
+        new = self.value()
+        self.assertEqual(type(new.name), str if
+                os.getenv('HBNB_TYPE_STORAGE') != 'db' else
+                type(None))
